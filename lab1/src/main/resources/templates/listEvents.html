@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Event Booking page - Welcome and choose an Event</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to our Event Booking App</h1>
+</header>
+<main>
+    </br>
+    <div th:each="event : ${events}">
+        <form action="" method="POST">
+            Name: <span th:text="${event.name}"></span></br>
+            Description: <span th:text="${event.description}"></span></br>
+            Rating: <span th:text="${event.popularityScore}"></span></br>
+            Location <span th:text="${event.location.name}"></span>
+            Category <span th:text="${event.category.name}"></span>
+        </form>
+        <form method="GET" th:action="@{/events/edit/{eventId}(eventId=${event.id})}">
+            <input type="submit" value="Edit" th:formaction="@{/events/edit/{eventId}(eventId=${event.getId()})}">
+        </form>
+        <form method="POST">
+            <input type="submit" value="Delete" th:formaction="@{/events/delete/{eventId}(eventId=${event.getId()})}">
+            <br/>
+        </form>
+    </div>
+    <form action="/eventBooking" method="POST">
+        <h2>Select an Event</h2>
+
+        <div th:each="event : ${events}">
+            <input type="radio" name="selectedEvent" th:value="${event.name}" required>
+            Name: <span th:text="${event.name}"></span><br/>
+            Description: <span th:text="${event.description}"></span><br/>
+            Rating: <span th:text="${event.popularityScore}"></span><br/>
+            Location: <span th:text="${event.location.name}"></span><br/>
+            Category <span th:text="${event.category.name}"></span>
+        </div>
+
+        <h2>Choose number of tickets:</h2>
+        <input type="number" name="numTickets" min="1" max="10" required><br/><br/>
+        <input type="submit" value="Submit" style="margin-bottom: 10px">
+    </form>
+
+    <form action="/eventsByLocation" method="GET">
+        <h2>Search events by location:</h2>
+        <select name="locationId">
+            <option value="7" selected>not specified</option>
+            <option th:each="event : ${events}" th:value="|${event.getLocationId()}|" th:text="${event.location.name}" ></option>
+        </select>
+
+        <input type="submit" value="search">
+    </form>
+    <form action="/eventsByCategory" method="GET">
+        <h2>Search events by category:</h2>
+        <select name="categoryId">
+            <option value="1" selected>not specified</option>
+            <option th:each="event : ${events}" th:value="|${event.getCategory().getId()}|" th:text="${event.getCategory().name}" ></option>
+        </select>
+
+        <input type="submit" value="search">
+    </form>
+    <form action="/events/add" method="GET" style="margin-top: 10px">
+        <h3>If you want to add an Event,click the button</h3>
+        <input type="submit">
+    </form>
+
+</main>
+</body>
+</html>
